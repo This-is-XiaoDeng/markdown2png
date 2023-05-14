@@ -2,7 +2,9 @@ import xml.dom.minidom
 import marko
 
 def markdown2html(markdown: str) -> str:
+    print(marko.convert(markdown))
     return f"<div>{marko.convert(markdown)}</div>".replace("\n", "")
+# .replace("\n\n", "\x00").replace("\n", "").replace("\x00", "\n")
 
 def parse_dom(nodes: list) -> list:
     ast, item = [], {}
@@ -20,7 +22,9 @@ def parse_dom(nodes: list) -> list:
 
 def parseHTML(html: str) -> list:
     dom = xml.dom.minidom.parseString(html)
-    return parse_dom(dom.childNodes)
+    ast = parse_dom(dom.childNodes)
+    print(ast)
+    return ast
 
 def parse(markdown: str) -> list:
     return parseHTML(markdown2html(markdown))

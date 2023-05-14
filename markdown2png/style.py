@@ -14,7 +14,9 @@ class DefaultStyle(Style):
     def __init__(self) -> None:
         super().__init__()
         self.widghts: dict = {
-            "text": text
+            "text": text,
+            "a": a,
+            "p": text
         }
         for i in range(1, 7):
             self.widghts[f"h{i}"] = eval(f"lambda data: head({i}, data)")
@@ -31,6 +33,7 @@ class H1(Widght):
 """
 
 def text(data: dict) -> Surface:
+    # print(data)
     text = pygame.font.Font(
         os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20).render(
             "".join(data["innerHTML"]), True, (0, 0, 0))
@@ -39,8 +42,22 @@ def text(data: dict) -> Surface:
     surface.blit(text, (5, 5))
     return surface
 
+def a(data: dict) -> Surface:
+    font = pygame.font.Font(os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20)
+    url = font.render(f' ({str(data.get("href"))})', True, (0, 153, 153))
+    text = font.render("".join(data["innerHTML"]), True, (0, 153, 255))
+    text_size = text.get_size()
+    url_size = url.get_size()
+    # print(text_size)
+    surface = Surface((text_size[0] + url_size[0] + 10, text_size[1] + 10))
+    surface.fill(BG_COLOR)
+    surface.blit(text, (5, 5))
+    surface.blit(url, (text_size[0], 5))
+    return surface
+    
+    
+
 def head(level: int, data: dict) -> Surface:
-    print(level)
     text = pygame.font.Font(
         os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 55 - level * 5).render(
             "".join(data["innerHTML"]), True, (0, 0, 0))
