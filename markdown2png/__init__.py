@@ -7,14 +7,14 @@ pygame.init()
 NEED_NEWLINE = ["h1", "h2", "h3", "h4", "h5", "h6", "p"]
 
 def draw(ast: list, style: Style) -> Surface:
-    print("Start")
+    # print("Start")
     surface = Surface(get_size(ast, style))
     surface.fill(style.bg_color)
     now_pos = [0, 0]
     newline = False
     line_height = 0
     for item in ast:
-        print("ITEM:",item)
+        # print("ITEM:",item)
         if type(item) == dict:
             if item["type"] in NEED_NEWLINE:
                 newline = True
@@ -35,8 +35,8 @@ def draw(ast: list, style: Style) -> Surface:
             now_pos[0] = 0
             line_height = 0
             newline = False
-            print("nl")
-    print("End")
+            # print("nl")
+    # print("End")
     return surface  
 
 def has_dict(items: list):
