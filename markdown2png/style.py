@@ -9,6 +9,8 @@ class Style:
     def __init__(self) -> None:
         self.widghts: dict = {}
         self.bg_color: tuple = BG_COLOR
+        # Left, Right, Top, Buttom
+        self.margin: tuple[int] = (5, 5, 5, 5)
 
 class DefaultStyle(Style):
     def __init__(self) -> None:
@@ -16,30 +18,30 @@ class DefaultStyle(Style):
         self.widghts: dict = {
             "text": text,
             "a": a,
-            "p": text
+            "p": text,
+            "code": code
         }
         for i in range(1, 7):
             self.widghts[f"h{i}"] = eval(f"lambda data: head({i}, data)")
-"""
-class H1(Widght):
-    def __init__(self) -> None:
-        self.font = pygame.font.Font(os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 50)
-    def get_size(self, data: dict) -> tuple:
-        return self.font.render(data["innerHTML"], True, (0, 0, 0)).get_size()
-    def draw(self, surface: pygame.Surface, pos: tuple) -> None:
-        surface.blit(
-            self.font.render()
-        )
-"""
+
+def code(data: dict) -> Surface:
+    # print(data)
+    text = pygame.font.Font(
+        os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20).render(
+            "".join(data["innerHTML"]), True, (255, 0, 51), (204, 204, 204))
+    surface = Surface((text.get_size()[0], text.get_size()[1]))
+    surface.fill(BG_COLOR)
+    surface.blit(text, (0, 0))
+    return surface
 
 def text(data: dict) -> Surface:
     # print(data)
     text = pygame.font.Font(
         os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20).render(
             "".join(data["innerHTML"]), True, (0, 0, 0))
-    surface = Surface((text.get_size()[0] + 10, text.get_size()[1] + 10))
+    surface = Surface((text.get_size()[0], text.get_size()[1]))
     surface.fill(BG_COLOR)
-    surface.blit(text, (5, 5))
+    surface.blit(text, (0, 0))
     return surface
 
 def a(data: dict) -> Surface:
@@ -49,10 +51,10 @@ def a(data: dict) -> Surface:
     text_size = text.get_size()
     url_size = url.get_size()
     # print(text_size)
-    surface = Surface((text_size[0] + url_size[0] + 10, text_size[1] + 10))
+    surface = Surface((text_size[0] + url_size[0], text_size[1]))
     surface.fill(BG_COLOR)
-    surface.blit(text, (5, 5))
-    surface.blit(url, (text_size[0], 5))
+    surface.blit(text, (0, 0))
+    surface.blit(url, (text_size[0], 0))
     return surface
     
     
@@ -61,8 +63,8 @@ def head(level: int, data: dict) -> Surface:
     text = pygame.font.Font(
         os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 55 - level * 5).render(
             "".join(data["innerHTML"]), True, (0, 0, 0))
-    surface = Surface((text.get_size()[0] + 10, text.get_size()[1] + 10))
+    surface = Surface((text.get_size()[0], text.get_size()[1]))
     surface.fill(BG_COLOR)
-    surface.blit(text, (5, 5))
+    surface.blit(text, (0, 0))
     return surface
 
