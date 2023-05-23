@@ -3,8 +3,7 @@ import marko
 
 def markdown2html(markdown: str) -> str:
     print(marko.convert(markdown))
-    return f"<div>{marko.convert(markdown)}</div>".replace("\n", "")
-# .replace("\n\n", "\x00").replace("\n", "").replace("\x00", "\n")
+    return f"<div>{marko.convert(markdown)}</div>".replace("\n\n", "<br />").replace("\n", "")
 
 def parse_dom(nodes: list) -> list:
     ast, item = [], {}

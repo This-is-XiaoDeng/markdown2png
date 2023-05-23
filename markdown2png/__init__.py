@@ -4,7 +4,7 @@ import pygame
 from .style import DefaultStyle, Style
 
 pygame.init()
-NEED_NEWLINE = ["h1", "h2", "h3", "h4", "h5", "h6", "p"]
+NEED_NEWLINE = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "br"]
 
 def draw(ast: list, style: Style) -> Surface:
     # print("Start")
