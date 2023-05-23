@@ -29,9 +29,20 @@ def code(data: dict) -> Surface:
     text = pygame.font.Font(
         os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20).render(
             "".join(data["innerHTML"]), True, (255, 0, 51), (204, 204, 204))
-    surface = Surface((text.get_size()[0], text.get_size()[1]))
-    surface.fill(BG_COLOR)
-    surface.blit(text, (0, 0))
+    if "language-" in str(data.get("class")):
+        _language = data["class"].replace("language-", "")
+    else:
+        _language = None
+    surface = Surface((text.get_size()[0], text.get_size()[1] if not _language else (text.get_size()[1] + 25)))
+    surface.fill(BG_COLOR if not _language else (204, 204, 204))
+    if _language:
+        language = pygame.font.Font(
+            os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20).render(
+                _language, True, (255, 0 ,51), (204, 204, 204))
+        surface.blit(language, (0, 0))
+        surface.blit(text, (0, 25))
+    else:
+        surface.blit(text, (0, 0))
     return surface
 
 def text(data: dict) -> Surface:
