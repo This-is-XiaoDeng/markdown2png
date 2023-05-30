@@ -25,8 +25,10 @@ class DefaultStyle(Style):
             self.widghts[f"h{i}"] = eval(f"lambda data: head({i}, data)")
 
 def code(data: dict) -> Surface:
-    if "language-" in str(data.get("class")):
+    if "language-" in str(data.get("class")) and data["parent_node"] == "pre":
         _language = data["class"].replace("language-", "")
+    elif data["parent_node"] == "pre":
+        _language = "unknown"
     else:
         _language = None
     
@@ -59,12 +61,23 @@ def code(data: dict) -> Surface:
 
 def text(data: dict) -> Surface:
     # print(data)
-    text = pygame.font.Font(
-        os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20).render(
-            "".join(data["innerHTML"]), True, (0, 0, 0))
-    surface = Surface((text.get_size()[0], text.get_size()[1]))
+    font = pygame.font.Font(
+        os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20)
+    weight = 0
+    height = 0
+
+    for line in " ".join(data["innerHTML"]).splitlines():
+        line_size = font.render(line, True, (0, 0, 0)).get_size()
+        weight = max(weight, line_size[0])
+        height += line_size[1]
+    surface = Surface((weight, height))
     surface.fill(BG_COLOR)
-    surface.blit(text, (0, 0))
+    
+    y = 0
+    for line in " ".join(data["innerHTML"]).splitlines():
+        surface.blit(font.render(line, True, (0, 0, 0)), (0, y))
+        y += 20
+
     return surface
 
 def a(data: dict) -> Surface:
