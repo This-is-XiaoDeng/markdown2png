@@ -20,10 +20,34 @@ class DefaultStyle(Style):
             "a": a,
             "p": text,
             "li": li,
-            "code": code
+            "code": code,
+            "s": s
         }
         for i in range(1, 7):
             self.widghts[f"h{i}"] = eval(f"lambda data: head({i}, data)")
+
+def s(data: dict) -> Surface:
+    font = pygame.font.Font(
+        os.path.join(path, "font/sarasa-fixed-cl-regular.ttf"), 20)
+    weight = 0
+    height = 0
+
+    for line in " ".join(data["innerHTML"]).splitlines():
+        line_size = font.render(line, True, (0, 0, 0)).get_size()
+        weight = max(weight, line_size[0])
+        height += line_size[1]
+    surface = Surface((weight, height))
+    surface.fill(BG_COLOR)
+    
+    y = 0
+    for line in " ".join(data["innerHTML"]).splitlines():
+        line_surface = font.render(line, True, (0, 0, 0))
+        line_size = line_surface.get_size()
+        pygame.draw.line(line_surface, (0, 0, 0), (0, line_size[1] / 2), (line_size[0], line_size[1] / 2))
+        surface.blit(line_surface, (0, y))
+        y += 20
+
+    return surface
 
 def li(data: dict) -> Surface:
     if data["parent_node"] == "ol":
@@ -40,6 +64,8 @@ def li(data: dict) -> Surface:
     surface.fill(BG_COLOR)
     surface.blit(text, (0, 0))
     return surface
+
+
 
 def code(data: dict) -> Surface:
     if "language-" in str(data.get("class")) and data["parent_node"] == "pre":
