@@ -4,7 +4,20 @@ import pygame
 from .style import DefaultStyle, Style
 
 pygame.init()
-NEED_NEWLINE = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "br", "pre", "ul", "ol", "li"]
+NEED_NEWLINE = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "p",
+    "br",
+    "pre",
+    "ul",
+    "ol",
+    "li"]
+
 
 def draw(ast: list, style: Style) -> Surface:
     # print("Start")
@@ -15,7 +28,7 @@ def draw(ast: list, style: Style) -> Surface:
     line_height = style.margin[2]
     for item in ast:
         # print("ITEM:",item)
-        if type(item) == dict:
+        if isinstance(item, dict):
             if item["type"] in NEED_NEWLINE:
                 newline = True
             if has_dict(item["innerHTML"]):
@@ -37,20 +50,22 @@ def draw(ast: list, style: Style) -> Surface:
             newline = False
             # print("nl")
     # print("End")
-    return surface  
+    return surface
+
 
 def has_dict(items: list):
     for item in items:
-        if type(item) == dict:
+        if isinstance(item, dict):
             return True
     else:
         return False
+
 
 def get_size(ast: list, style: Style) -> tuple:
     size, newline = [0, 5], False
     _size, _size1 = [0, 0], [0, 0]
     for item in ast:
-        if type(item) == dict:
+        if isinstance(item, dict):
             if item["type"] in NEED_NEWLINE:
                 newline = True
             if has_dict(item["innerHTML"]):
@@ -66,21 +81,19 @@ def get_size(ast: list, style: Style) -> tuple:
         _size[0] += _size1[0]
         _size[1] = max(_size[1], _size1[1])
         _size1 = (0, 0)
-        
+
         if newline:
             size[0] = max(size[0], _size[0])
             size[1] += _size[1] + style.margin[2] + style.margin[3]
             _size = [0, 0]
             newline = False
-            
+
     size[0] = max(size[0], _size[0])
     size[1] += _size[1] + style.margin[2] + style.margin[3]
     size[0] += style.margin[0] + style.margin[1]
     return tuple(size)
 
-def markdown2png(markdown: str, output_path: str, style: Style = DefaultStyle()) -> None:
+
+def markdown2png(markdown: str, output_path: str,
+                 style: Style = DefaultStyle()) -> None:
     pygame.image.save(draw(parser.parse(markdown), style), output_path)
-    
-
-
-    
